@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
+import 'data/services/http_service.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -15,6 +16,7 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(dioProvider);
     final router = ref.watch(routerProvider);
     return MaterialApp.router(
       title: 'Tracker Fleet',
