@@ -7,11 +7,22 @@ import '../../data/repositories/auth_repository.dart';
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
+  String _formatPercent(double part, double total) {
+    if (total <= 0) return '0%';
+    return '${(part / total * 100).toStringAsFixed(0)}%';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vehicles = ref.watch(vehiclesProvider);
     final totalFuel = ref.watch(totalFuelAmountProvider);
     final totalMaintenance = ref.watch(totalMaintenanceAmountProvider);
+    final monthlyFuelByVehicle = ref.watch(vehicleMonthlyFuelStatsProvider);
+
+    final fuelAmount = totalFuel.whenOrNull(data: (v) => v) ?? 0.0;
+    final maintenanceAmount =
+        totalMaintenance.whenOrNull(data: (v) => v) ?? 0.0;
+    final monthlyTotal = fuelAmount + maintenanceAmount;
 
     return Scaffold(
       appBar: AppBar(
@@ -34,29 +45,81 @@ class DashboardScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Stats 70% / 30%
+            Text(
+              'Dépenses du mois (${DateTime.now().month}/${DateTime.now().year})',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
                   child: _StatCard(
                     label: 'Gasoil',
-                    percent: '70%',
+                    percent: _formatPercent(fuelAmount, monthlyTotal),
                     color: Colors.blue,
                     icon: Icons.local_gas_station,
-                    amount: totalFuel.whenOrNull(data: (v) => v) ?? 0,
+                    amount: fuelAmount,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
                     label: 'Maintenance',
-                    percent: '30%',
+                    percent: _formatPercent(maintenanceAmount, monthlyTotal),
                     color: Colors.orange,
                     icon: Icons.build,
-                    amount: totalMaintenance.whenOrNull(data: (v) => v) ?? 0,
+                    amount: maintenanceAmount,
                   ),
                 ),
               ],
+            ),
+            if (monthlyTotal > 0) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Total mensuel : ${monthlyTotal.toStringAsFixed(2)} MAD',
+                style: const TextStyle(color: Colors.grey),
+              ),
+            ],
+            const SizedBox(height: 24),
+            const Text(
+              'Consommation gasoil (mois en cours)',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            monthlyFuelByVehicle.when(
+              data: (stats) {
+                if (stats.isEmpty) {
+                  return const Text('Aucun véhicule');
+                }
+                final withData = stats.where((s) => s.liters > 0 || s.amount > 0);
+                if (withData.isEmpty) {
+                  return const Text(
+                    'Aucun plein enregistré ce mois-ci',
+                    style: TextStyle(color: Colors.grey),
+                  );
+                }
+                return Column(
+                  children: withData
+                      .map(
+                        (s) => Card(
+                          child: ListTile(
+                            dense: true,
+                            leading: const Icon(
+                              Icons.local_gas_station,
+                              color: Colors.blue,
+                            ),
+                            title: Text(s.name),
+                            subtitle: Text(
+                              '${s.liters.toStringAsFixed(1)} L — ${s.amount.toStringAsFixed(2)} MAD',
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                );
+              },
+              loading: () => const LinearProgressIndicator(),
+              error: (e, _) => Text('Erreur: $e'),
             ),
             const SizedBox(height: 24),
             const Text(
@@ -64,53 +127,47 @@ class DashboardScreen extends ConsumerWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            // Liste des véhicules
             vehicles.when(
-              data:
-                  (list) =>
-                      list.isEmpty
-                          ? const Center(child: Text('Aucun véhicule ajouté'))
-                          : ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: list.length,
-                            itemBuilder:
-                                (_, i) => Card(
-                                  child: ListTile(
-                                    leading: const Icon(
-                                      Icons.directions_car,
-                                      color: Colors.blue,
-                                    ),
-                                    title: Text(list[i].name),
-                                    subtitle: Text(list[i].plate),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.local_gas_station,
-                                            color: Colors.blue,
-                                          ),
-                                          onPressed:
-                                              () => context.push(
-                                                '/fuel-entry/${list[i].id}',
-                                              ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.build,
-                                            color: Colors.orange,
-                                          ),
-                                          onPressed:
-                                              () => context.push(
-                                                '/maintenance/${list[i].id}',
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+              data: (list) => list.isEmpty
+                  ? const Center(child: Text('Aucun véhicule ajouté'))
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: list.length,
+                      itemBuilder: (_, i) => Card(
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.directions_car,
+                            color: Colors.blue,
                           ),
+                          title: Text(list[i].name),
+                          subtitle: Text(list[i].plate),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.local_gas_station,
+                                  color: Colors.blue,
+                                ),
+                                onPressed: () => context.push(
+                                  '/fuel-entry/${list[i].id}',
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.build,
+                                  color: Colors.orange,
+                                ),
+                                onPressed: () => context.push(
+                                  '/maintenance/${list[i].id}',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Text('Erreur: $e'),
             ),

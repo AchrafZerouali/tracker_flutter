@@ -1,0 +1,24 @@
+Tracker Fleet — Partiel Programmation Mobile (ESISA)
+Projet : tracker_flutter
+Date de rendu : 04/06/2026
+
+--- Temps passé (à ajuster si besoin) ---
+Développement initial (structure, Firebase, écrans) : ~4 h
+Corrections + tests + config Firestore / Chrome      : ~2 h
+TOTAL estimé                                       : ~6 h
+
+--- Tokens Cursor (IA) ---
+Consulter : Cursor → Settings → Usage / facturation
+Noter ici le nombre affiché pour la session du projet : _______________
+
+--- Dépôt Git ---
+Remote : https://github.com/AchrafZerouali/tracker_flutter
+Collaborateur invité : M-Lahmer (à confirmer dans GitHub → Settings → Collaborators)
+
+--- Lancement pour démo ---
+flutter pub get
+flutter run -d chrome
+
+--- Firebase ---
+Auth : e-mail / mot de passe activé
+Firestore : règles dans firestore.rules (multi-tenant users/{uid}/...)

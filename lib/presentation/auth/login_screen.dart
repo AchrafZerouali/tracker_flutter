@@ -22,6 +22,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  Future<void> _register() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Remplir tous les champs')),
+      );
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authRepositoryProvider).register(
+            _emailController.text.trim(),
+            _passwordController.text.trim(),
+          );
+      if (mounted) context.go('/dashboard');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur: ${e.toString()}')),
+        );
+      }
+    }
+    setState(() => _isLoading = false);
+  }
+
   Future<void> _login() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(
@@ -94,14 +118,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                 ),
-                child:
-                    _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                          'Se connecter',
-                          style: TextStyle(fontSize: 16),
-                        ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
+                        'Se connecter',
+                        style: TextStyle(fontSize: 16),
+                      ),
               ),
+            ),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: _isLoading ? null : _register,
+              child: const Text('Créer un compte (inscription)'),
             ),
           ],
         ),

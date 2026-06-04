@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -64,7 +61,7 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.trackerFlutter',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
+  static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyAEihFW2NWhEicfMRr5KRTTqFVruB8toag',
     appId: '1:801831492617:web:f7e82fb00fdef0daf4acd8',
     messagingSenderId: '801831492617',
@@ -73,4 +70,6 @@ class DefaultFirebaseOptions {
     storageBucket: 'tracker-flutter-55384.firebasestorage.app',
     measurementId: 'G-RWR2M3BYZD',
   );
+
+  static const FirebaseOptions windows = web;
 }

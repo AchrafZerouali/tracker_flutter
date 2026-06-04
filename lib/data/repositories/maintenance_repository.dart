@@ -19,7 +19,6 @@ class MaintenanceRepository {
 
   Stream<List<Maintenance>> getMaintenances(String vehicleId) => _col
       .where('vehicleId', isEqualTo: vehicleId)
-      .orderBy('date', descending: true)
       .snapshots()
       .map(
         (snap) =>
@@ -30,7 +29,8 @@ class MaintenanceRepository {
                     d.id,
                   ),
                 )
-                .toList(),
+                .toList()
+              ..sort((a, b) => b.date.compareTo(a.date)),
       );
 
   Stream<List<Maintenance>> getAllMaintenances() => _col.snapshots().map(
