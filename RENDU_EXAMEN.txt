@@ -7,9 +7,18 @@ Développement initial (structure, Firebase, écrans) : ~1 h
 Corrections + tests + config Firestore / Chrome      : ~1 h
 TOTAL estimé                                       : ~2 h
 
---- Tokens Cursor (IA) ---
-Consulter : Cursor → Settings → Usage / facturation
-Noter ici le nombre affiché pour la session du projet : _______________
+--- Tokens / usage Cursor (IA) ---
+Comment trouver le chiffre :
+  1. Ouvrir Cursor
+  2. Menu engrenage (en bas a gauche) ou Ctrl + ,
+  3. Cursor Settings → onglet "Usage" (ou "General" → lien vers le compte)
+  4. Ou aller sur : https://cursor.com/settings
+  5. Noter ce qui est affiche (tokens, requetes premium, ou credits utilises)
+
+Valeur a noter pour cette session projet (04/06/2026) :
+  → COLLEZ ICI LE CHIFFRE : _______________
+
+Si seules les "requetes" sont visibles, ecrire par ex. : "Premium requests : 45"
 
 --- Dépôt Git ---
 Remote : https://github.com/AchrafZerouali/tracker_flutter
