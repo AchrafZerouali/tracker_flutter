@@ -1,16 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../../core/firestore_ids.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers.dart';
 import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/maintenance_repository.dart';
-import '../../domain/models/category_maintenance.dart';
 import '../../domain/models/maintenance.dart';
-
-final categoriesProvider = StreamProvider<List<CategoryMaintenance>>((ref) {
-  final repo = ref.watch(categoryRepositoryProvider);
-  return repo.getCategories();
-});
 
 class MaintenanceScreen extends ConsumerStatefulWidget {
   final String vehicleId;
@@ -107,7 +101,7 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
     setState(() => _isLoading = true);
     try {
       final m = Maintenance(
-        id: FirebaseFirestore.instance.collection('tmp').doc().id,
+        id: newFirestoreId(),
         vehicleId: widget.vehicleId,
         categoryId: _selectedCategoryId,
         amount: double.parse(_amountController.text),

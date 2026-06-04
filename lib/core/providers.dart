@@ -1,10 +1,29 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/repositories/category_repository.dart';
 import '../data/repositories/fuel_repository.dart';
 import '../data/repositories/maintenance_repository.dart';
 import '../data/repositories/vehicle_repository.dart';
+import '../domain/models/category_maintenance.dart';
 import '../domain/models/fuel_entry.dart';
 import '../domain/models/maintenance.dart';
 import '../domain/models/vehicle.dart';
+
+/// Client HTTP (pile technique examen : dio).
+final dioProvider = Provider<Dio>((ref) {
+  final dio = Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+    ),
+  );
+  ref.onDispose(dio.close);
+  return dio;
+});
+
+final categoriesProvider = StreamProvider<List<CategoryMaintenance>>((ref) {
+  return ref.watch(categoryRepositoryProvider).getCategories();
+});
 
 bool _isCurrentMonth(DateTime date) {
   final now = DateTime.now();

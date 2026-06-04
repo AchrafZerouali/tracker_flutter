@@ -15,8 +15,6 @@ class VehicleRepository {
 
   Future<void> addVehicle(Vehicle v) => _col.doc(v.id).set(v.toJson());
 
-  Future<void> deleteVehicle(String id) => _col.doc(id).delete();
-
   Stream<List<Vehicle>> getVehicles() => _col.snapshots().map(
     (snap) =>
         snap.docs

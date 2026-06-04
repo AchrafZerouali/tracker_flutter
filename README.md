@@ -1,16 +1,18 @@
 # tracker_flutter
 
-A new Flutter project.
+Application Flutter de suivi gasoil et maintenance (examen ESISA).
 
-## Getting Started
+## Lancer
 
-This project is a starting point for a Flutter application.
+```bash
+flutter pub get
+flutter run -d chrome
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Flutter, Riverpod, GoRouter, Dio, Firebase Auth, Cloud Firestore.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Rendu examen
+
+Voir `RENDU_EXAMEN.txt` et `firestore.rules`.

@@ -3,9 +3,9 @@ Projet : tracker_flutter
 Date de rendu : 04/06/2026
 
 --- Temps passé (à ajuster si besoin) ---
-Développement initial (structure, Firebase, écrans) : ~4 h
-Corrections + tests + config Firestore / Chrome      : ~2 h
-TOTAL estimé                                       : ~6 h
+Développement initial (structure, Firebase, écrans) : ~1 h
+Corrections + tests + config Firestore / Chrome      : ~1 h
+TOTAL estimé                                       : ~2 h
 
 --- Tokens Cursor (IA) ---
 Consulter : Cursor → Settings → Usage / facturation

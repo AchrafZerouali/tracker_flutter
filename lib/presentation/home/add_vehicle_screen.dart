@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../core/firestore_ids.dart';
 import '../../data/repositories/vehicle_repository.dart';
 import '../../domain/models/vehicle.dart';
 
@@ -34,7 +34,7 @@ class _AddVehicleScreenState extends ConsumerState<AddVehicleScreen> {
     setState(() => _isLoading = true);
     try {
       final vehicle = Vehicle(
-        id: FirebaseFirestore.instance.collection('tmp').doc().id,
+        id: newFirestoreId(),
         name: _nameController.text.trim(),
         plate: _plateController.text.trim(),
       );

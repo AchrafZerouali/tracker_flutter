@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../core/firestore_ids.dart';
 import '../../core/providers.dart';
 import '../../data/repositories/fuel_repository.dart';
 import '../../domain/models/fuel_entry.dart';
@@ -35,7 +35,7 @@ class _FuelEntryScreenState extends ConsumerState<FuelEntryScreen> {
     setState(() => _isLoading = true);
     try {
       final entry = FuelEntry(
-        id: FirebaseFirestore.instance.collection('tmp').doc().id,
+        id: newFirestoreId(),
         vehicleId: widget.vehicleId,
         liters: double.parse(_litersController.text),
         amount: double.parse(_amountController.text),
